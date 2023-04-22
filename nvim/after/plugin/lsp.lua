@@ -6,6 +6,8 @@ lsp.preset("recommended")
 
 lsp.ensure_installed(servers)
 
+lsp.configure('glslls', {})
+
 -- Fix Undefined global 'vim'
 lsp.configure('lua_ls', {
     settings = {
