@@ -24,6 +24,12 @@ lsp.configure('sourcekit', {
     filetypes = { 'swift' },
 })
 
+lsp.configure('rust_analyzer', {
+    cmd = {
+        "rustup", "run", "stable", "rust-analyzer"
+    }
+})
+
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
