@@ -41,7 +41,7 @@ window#waybar.solo {
 }
 
 #workspaces button {
-    padding: 0px 3px;
+    padding: 0px 0.7em;
     background: @background;
     color: @foreground;
 }
@@ -51,7 +51,9 @@ window#waybar.solo {
 }
 
 #workspaces button.active {
-    color: @green;
+    background: @green;
+    color: @white;
+    border-radius: 30px;
 }
 
 #workspaces button.urgent {

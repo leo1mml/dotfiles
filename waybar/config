@@ -7,9 +7,10 @@
                       // Choose the order of the modules
         "modules-left": ["wlr/workspaces", "custom/media"],
         "modules-center": ["hyprland/window"],
-        "modules-right": ["pulseaudio", "cpu", "memory", "temperature", "keyboard-state", "clock", "tray"],
+        "modules-right": ["tray", "pulseaudio", "cpu", "memory", "temperature", "keyboard-state", "clock"],
         // Modules configuration
         "wlr/workspaces": {
+            "on-click": "activate",
             "disable-scroll": true,
             //     "all-outputs": true,
             //     "warp-on-scroll": false,
@@ -18,7 +19,7 @@
                 "1": "",
                 "2": "",
                 "3": "",
-                "4": "",
+                "4": "󰊴",
                 "5": "",
                 "urgent": "",
                 "focused": "",
