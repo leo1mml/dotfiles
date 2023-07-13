@@ -1,5 +1,4 @@
 sleep 30
-hyprctl keyword windowrule "workspace unset,kitty"
-hyprctl keyword windowrule "workspace unset,Subl"
-hyprctl keyword windowrule "workspace unset,Mailspring"
+hyprctl keyword windowrule "workspace unset,alacritty"
 hyprctl keyword windowrule "workspace unset,firefox"
+hyprctl keyword windowrule "workspace unset,godot"
