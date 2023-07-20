@@ -47,26 +47,55 @@ dap.adapters.codelldb = {
   type = 'server',
   port = "${port}",
   executable = {
-    -- Change this to your path!
-    command = 'codelldb',
+    command = '/usr/bin/codelldb',
     args = {"--port", "${port}"},
   }
 }
 
-dap.configurations.rust= {
-  {
-    name = "Launch file",
-    type = "codelldb",
-    request = "launch",
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
-    cwd = '${workspaceFolder}',
-    stopOnEntry = false,
-  },
+dap.configurations.c = {
+    {
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd()..'/', 'file')
+        end,
+        --program = '${fileDirname}/${fileBasenameNoExtension}',
+        cwd = '${workspaceFolder}',
+        terminal = 'integrated'
+    }
 }
 
-dapui.setup({})
+dap.configurations.cpp = dap.configurations.c
+
+dap.configurations.rust = {
+    {
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        terminal = 'integrated',
+        sourceLanguages = { 'rust' },
+        name = "Run file"
+    },
+    {
+      type = "codelldb",
+      request = "launch",
+      name = "Debug test",
+      cargo = {
+        args = {"test", "--no-run",},
+        filter = {
+          name = "libthat",
+          kind = "lib"
+        },
+      },
+      args = {"$selectedText"},
+      cwd = "${workspaceFolder}"
+    },
+}
+
+dapui.setup()
 
 
 vim.keymap.set("n", "<F5>", "<Cmd>lua require'dap'.continue()<CR>")
