@@ -85,8 +85,17 @@
         },
         "clock": {
             "timezone": "Europe/Lisbon",
-            "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-            "format-alt": "{:%Y-%m-%d}"
+            "tooltip-format": "<big>{:%Y %B}</big>\n<small>{calendar}</small>",
+            "format-alt": "{:%Y-%m-%d}",
+            "calendar": {
+                "format": {
+                    "months":     "<span color='#ffead3'><b>{}</b></span>",
+                    "days":       "<span color='#cdd6f4'><b>{}</b></span>",
+                    "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                    "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+                    "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+                }
+            }
         },
         "cpu": {
             "format": "{usage}% ",
