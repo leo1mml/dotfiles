@@ -1,5 +1,6 @@
 [default]
-path = "~/Documents/Wallpapers"
-duration = "15m"
-sorting = "random"
+# path = "~/Documents/Wallpapers"
+path = "~/Documents/Wallpapers/firefly-witch.jpg"
+# duration = "15m"
+# sorting = "random"
 
