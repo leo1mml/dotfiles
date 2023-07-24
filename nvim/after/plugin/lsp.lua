@@ -1,6 +1,6 @@
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
 local lsp = require("lsp-zero")
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls'}
+local servers = {'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls'}
 
 lsp.preset("recommended")
 
@@ -23,6 +23,8 @@ lsp.configure('sourcekit', {
     cmd = { 'xcrun', 'sourcekit-lsp' },
     filetypes = { 'swift' },
 })
+
+lsp.configure('gdscript')
 
 lsp.configure('rust_analyzer', {
     cmd = {
