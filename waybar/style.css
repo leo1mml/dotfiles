@@ -75,8 +75,13 @@ window#waybar.solo {
 #mode,
 #submap,
 #idle_inhibitor,
+#custom-power,
+#temperature,
+#cpu,
+#disk,
+#memory,
 #bluetooth {
-    padding: 0 10px;
+    padding: 0 8px;
     color: @foreground;
     background-color: @background;
 }

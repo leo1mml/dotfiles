@@ -6,8 +6,9 @@
         "spacing": 4, // Gaps between modules (4px)
                       // Choose the order of the modules
         "modules-left": ["wlr/workspaces", "custom/media"],
-        "modules-center": ["hyprland/window"],
-        "modules-right": ["tray", "pulseaudio", "cpu", "memory", "temperature", "keyboard-state", "clock"],
+        //"modules-center": ["hyprland/window"],
+        "modules-center": ["clock"],
+        "modules-right": ["tray", "pulseaudio", "cpu", "memory", "temperature", "keyboard-state", "custom/power"],
         // Modules configuration
         "wlr/workspaces": {
             "on-click": "activate",
@@ -85,7 +86,7 @@
         },
         "clock": {
             "timezone": "Europe/Lisbon",
-            "tooltip-format": "<big>{:%Y %B}</big>\n<small>{calendar}</small>",
+            "tooltip-format": "<small>{calendar}</small>",
             "format-alt": "{:%Y-%m-%d}",
             "calendar": {
                 "format": {
@@ -163,7 +164,7 @@
             "on-click": "pavucontrol"
         },
         "custom/media": {
-            "format": "{icon} {}",
+            "format": "{icon}",
             "return-type": "json",
             "max-length": 40,
             "format-icons": {
@@ -173,5 +174,12 @@
             "escape": true,
             "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
                                                                        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+        },
+        "custom/power": {
+            "format": "{icon} {}",
+            "format-icons": {
+                "default": "⏻"
+            },
+            "on-click": "powermenu"
         }
 }
