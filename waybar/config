@@ -190,9 +190,9 @@
             "on-click": "dunstctl history-pop; sleep 3; dunstctl close-all;"
         },
         "custom/weather": {
-            "format": "{} °",
+            "format": "{}°C",
             "tooltip": true,
-            "interval": 3600,
+            "interval": 300,
             "exec": "wttrbar",
             "return-type": "json"
         }
