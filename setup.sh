@@ -1,3 +1,4 @@
+#!bin/sh
 sudo ln -s ~/dotfiles/logid.cfg /etc/
 ln -s ~/dotfiles/.zshrc ~/.zshrc
 ln -s ~/dotfiles/starship.toml ~/.config/starship.toml
