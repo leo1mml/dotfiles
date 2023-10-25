@@ -8,7 +8,7 @@
         "modules-left": ["hyprland/workspaces",],
         //"modules-center": ["hyprland/window"],
         "modules-center": ["mpd", "custom/media"],
-        "modules-right": ["tray", "pulseaudio", "cpu", "memory", "keyboard-state", "custom/weather", "clock", "custom/notifications", "custom/power"],
+        "modules-right": ["tray", "pulseaudio", "cpu", "memory", "custom/weather", "clock", "custom/notifications", "custom/power"],
         // Modules configuration
         "hyprland/workspaces": {
             "on-click": "activate",
