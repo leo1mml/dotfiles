@@ -21,6 +21,7 @@ vim.g.mapleader = " "
 vim.o.mouse = 'a'
 -- Enable break indent
 vim.o.breakindent = true
+vim.o.foldmethod = 'indent'
 
 -- Save undo history
 vim.o.undofile = true
