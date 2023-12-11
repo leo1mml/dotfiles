@@ -1,59 +1,135 @@
--- Feel free to add/remove any LSPs that you want here. They will automatically be installed
 return {
-    "VonHeikemen/lsp-zero.nvim",
-    branch = 'v2.x',
+    "williamboman/mason-lspconfig.nvim",
     dependencies = {
-        -- LSP Support
-        {'neovim/nvim-lspconfig'},             -- Required
+        "simrat39/rust-tools.nvim",
+        'nvim-lua/plenary.nvim',
+        'mfussenegger/nvim-dap',
+        "neovim/nvim-lspconfig",
         {
             "williamboman/mason.nvim",
             build = ":MasonUpdate" -- :MasonUpdate updates registry contents
         },
-        {'williamboman/mason-lspconfig.nvim'}, -- Optional
-        -- Autocompletion
-        {'hrsh7th/nvim-cmp'},     -- Required
-        {'hrsh7th/cmp-nvim-lsp'}, -- Required
-        {'L3MON4D3/LuaSnip'},     -- Required
+        'williamboman/mason-lspconfig.nvim',
+        "hrsh7th/cmp-nvim-lsp",
+        'hrsh7th/nvim-cmp',
+        { "antosha417/nvim-lsp-file-operations", config = true },
+        'L3MON4D3/LuaSnip',
     },
     config = function()
-        local lsp = require("lsp-zero")
-        local servers = {'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls'}
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+            border = "rounded",
+        })
 
-        lsp.preset("recommended")
+        local mason = require("mason")
+        mason.setup()
+        local masonlspconfig = require("mason-lspconfig")
+        local lspconfig = require("lspconfig")
+        local cmp_nvim_lsp = require("cmp_nvim_lsp")
+        local keymap = vim.keymap -- for conciseness
+        local opts = { noremap = true, silent = true }
 
-        lsp.ensure_installed(servers)
+        local on_attach = function(client, bufnr)
+            opts.buffer = bufnr
 
-        lsp.configure('glslls', {})
+            -- set keybinds
+            opts.desc = "Show LSP references"
+            keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
 
-        -- Fix Undefined global 'vim'
-        lsp.configure('lua_ls', {
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { 'vim' }
+            opts.desc = "Go to declaration"
+            keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+
+            opts.desc = "Show LSP definitions"
+            keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+
+            opts.desc = "Show LSP implementations"
+            keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+
+            opts.desc = "Show LSP type definitions"
+            keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+
+            opts.desc = "See available code actions"
+            keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+
+            opts.desc = "Smart rename"
+            keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+
+            opts.desc = "Show buffer diagnostics"
+            keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+
+            opts.desc = "Show line diagnostics"
+            keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+
+            opts.desc = "Go to previous diagnostic"
+            keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
+
+            opts.desc = "Go to next diagnostic"
+            keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
+
+            opts.desc = "Show documentation for what is under cursor"
+            keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
+
+            opts.desc = "Restart LSP"
+            keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+        end
+
+        -- used to enable autocompletion (assign to every lsp server config)
+        local capabilities = cmp_nvim_lsp.default_capabilities()
+
+        -- Change the Diagnostic symbols in the sign column (gutter)
+        -- (not in youtube nvim video)
+        local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+        end
+        masonlspconfig.setup {
+            ensure_installed = {'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls'},
+            automatic_installation = true,
+            handlers = {
+                function (server_name) -- default handler (optional)
+                    lspconfig[server_name].setup {
+                        capabilities = capabilities,
+                        on_attach = on_attach,
                     }
-                }
-            }
-        })
-
-        lsp.configure('sourcekit', {
-            cmd = { 'xcrun', 'sourcekit-lsp' },
-            filetypes = { 'swift' },
-        })
-
-        lsp.configure('gdscript')
-
-        lsp.configure('rust_analyzer', {
-            cmd = {
-                "rustup", "run", "stable", "rust-analyzer"
-            }
-        })
-
-        lsp.setup()
-
+                end,
+                -- Next, you can provide targeted overrides for specific servers.
+                ["rust_analyzer"] = function ()
+                    local rt = require("rust-tools")
+                    rt.setup {
+                        server = {
+                            tools = {
+                                hover_actions = {
+                                    auto_focus = true,
+                                },
+                            },
+                            on_attach = function(_, bufnr)
+                                -- Hover actions
+                                on_attach(_, bufnr)
+                                vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
+                                -- Code action groups
+                                vim.keymap.set("n", "<Leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
+                            end,
+                            capabilities = capabilities
+                        },
+                    }
+                end,
+                ["lua_ls"] = function ()
+                    lspconfig.lua_ls.setup {
+                        settings = {
+                            Lua = {
+                                diagnostics = {
+                                    globals = { "vim" }
+                                }
+                            }
+                        }
+                    }
+                end,
+            },
+        }
         vim.diagnostic.config({
             virtual_text = true,
         })
 
     end
 }
+
