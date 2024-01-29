@@ -2,11 +2,14 @@
 
 sddmback="/usr/share/sddm/themes/corners/backgrounds/bg.png"
 sddmconf="/usr/share/sddm/themes/corners/theme.conf"
-slnkwall="${XDG_CONFIG_HOME:-$HOME/.config}/swww/wall.set"
+slnkwall="${XDG_CONFIG_HOME:-$HOME}/.config/swww/wall.set"
 
 if [ "$(getfacl -p /home/${USER} | grep user:sddm | awk '{print substr($0,length)}')" != "x" ] ; then
     echo "granting sddm execution access to /home/${USER}..."
-    setfacl -m u:sddm:x /home/${USER}
+    setfacl -m u:sddm:rx /home/${USER}/.config/swww/wall.set
+    setfacl -m u:sddm:rx /home/${USER}/.config/swww
+    setfacl -m u:sddm:rx /home/${USER}/.config
+    setfacl -m u:sddm:rx /home/${USER}
 fi
 
 if [ "$(grep "Background=" "${sddmconf}")" == "Background=\"${slnkwall}\"" ] ; then
