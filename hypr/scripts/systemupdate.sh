@@ -36,6 +36,6 @@ fi
 
 # Trigger upgrade
 if [ "$1" == "up" ] ; then
-    alacritty --title systemupdate -e ${aurhlpr} -Syu $fpk_exup
+    alacritty --title systemupdate -e ${aurhlpr} ${fpk_exup}
 fi
 
