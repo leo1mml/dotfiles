@@ -58,7 +58,7 @@ done | rofi -dmenu -theme-str "${r_override}" -config $RofiConf)
 # launch game
 if [ ! -z "$RofiSel" ] ; then
     launchid=`echo "$GameList" | grep "$RofiSel" | cut -d '|' -f 2`
-    steam -applaunch "${launchid} [gamemoderun %command%]" &
+    com.valvesoftware.Steam -applaunch "${launchid} [gamemoderun %command%]" &
     dunstify "t1" -a "Launching ${RofiSel}..." -i ${SteamThumb}/${launchid}_header.jpg -r 91190 -t 2200
 fi
 
