@@ -18,3 +18,4 @@ style = "Regular"
 blur = true
 opacity = 0.8
 decorations = "Buttonless"
+padding = { x = 20, y = 20 }
