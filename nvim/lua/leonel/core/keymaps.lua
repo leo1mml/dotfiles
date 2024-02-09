@@ -31,9 +31,5 @@ vim.keymap.set('n', '<C-Left>', '<cmd>vertical resize -2<CR>')
 vim.keymap.set('n', '<C-Right>', '<cmd>vertical resize +2<CR>')
 
 -- Switch between window
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', '<leader>tp', '<cmd>bprev<CR>')
 vim.keymap.set('n', '<leader>tn', '<cmd>bnext<CR>')
