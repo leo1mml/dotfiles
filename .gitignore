@@ -1,4 +1,4 @@
 tags
 test.sh
 .luarc.json
-*.spotify_token_cache.json
+.spotify_token_cache.json
