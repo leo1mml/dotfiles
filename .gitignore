@@ -2,4 +2,4 @@ tags
 test.sh
 .luarc.json
 .spotify_token_cache.json
-hypr/themes
+hypr/themes/*
