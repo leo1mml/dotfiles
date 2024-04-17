@@ -12,6 +12,8 @@ vim.opt.expandtab = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.cursorline = true
+vim.opt.pumheight = 10
+vim.opt.colorcolumn = "80"
 
 vim.opt.smartindent = true
 vim.opt.wrap = false
@@ -49,4 +51,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
