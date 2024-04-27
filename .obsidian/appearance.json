@@ -1,0 +1,9 @@
+{
+  "baseFontSize": 16,
+  "cssTheme": "Things",
+  "theme": "system",
+  "accentColor": "",
+  "enabledCssSnippets": [
+    "theme-override"
+  ]
+}
