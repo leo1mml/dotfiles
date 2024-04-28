@@ -8,8 +8,8 @@ RofiConf="${XDG_CONFIG_HOME:-$HOME/.config}/rofi/steam/gamelauncher_${1}.rasi"
 
 
 # set steam library
-SteamLib="${XDG_DATA_HOME:-$HOME/.var/app/com.valvesoftware.Steam/.local/share}/Steam/config/libraryfolders.vdf"
-SteamThumb="${XDG_DATA_HOME:-$HOME/.var/app/com.valvesoftware.Steam/.local/share}/Steam/appcache/librarycache"
+SteamLib="${XDG_DATA_HOME:-$HOME/.local/share}/Steam/config/libraryfolders.vdf"
+SteamThumb="${XDG_DATA_HOME:-$HOME/.local/share}/Steam/appcache/librarycache"
 
 if [ ! -f $SteamLib ] || [ ! -d $SteamThumb ] || [ ! -f $RofiConf ] ; then
     dunstify "t1" -a "Steam library not found!" -r 91190 -t 2200
@@ -58,7 +58,7 @@ done | rofi -dmenu -theme-str "${r_override}" -config $RofiConf)
 # launch game
 if [ ! -z "$RofiSel" ] ; then
     launchid=`echo "$GameList" | grep "$RofiSel" | cut -d '|' -f 2`
-    com.valvesoftware.Steam -applaunch "${launchid} [gamemoderun %command%]" &
+    steam -applaunch "${launchid} [gamemoderun %command%]" &
     dunstify "t1" -a "Launching ${RofiSel}..." -i ${SteamThumb}/${launchid}_header.jpg -r 91190 -t 2200
 fi
 
