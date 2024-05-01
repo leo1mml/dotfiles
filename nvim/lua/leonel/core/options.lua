@@ -16,7 +16,7 @@ vim.opt.pumheight = 10
 vim.opt.colorcolumn = "80"
 
 vim.opt.smartindent = true
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.clipboard = "unnamedplus"
 vim.g.mapleader = " "
 -- Enable mouse mode
