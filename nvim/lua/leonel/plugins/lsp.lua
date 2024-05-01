@@ -24,9 +24,9 @@ return {
         local keymap = vim.keymap -- for conciseness
         local opts = { noremap = true, silent = true }
         require 'lspconfig'.gdscript.setup {
-            on_attach = function (client)
+            on_attach = function(client)
                 local _notify = client.notify
-                client.notify = function (method, params)
+                client.notify = function(method, params)
                     if method == 'textDocument/didClose' then
                         -- Godot doesn't implement didClose yet
                         return
@@ -36,6 +36,7 @@ return {
             end
         }
 
+        require 'lspconfig'.sourcekit.setup {}
 
         local on_attach = function(client, bufnr)
             opts.buffer = bufnr
@@ -92,17 +93,17 @@ return {
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
         end
         masonlspconfig.setup {
-            ensure_installed = {'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls'},
+            ensure_installed = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls' },
             automatic_installation = true,
             handlers = {
-                function (server_name) -- default handler (optional)
+                function(server_name) -- default handler (optional)
                     lspconfig[server_name].setup {
                         capabilities = capabilities,
                         on_attach = on_attach,
                     }
                 end,
                 -- Next, you can provide targeted overrides for specific servers.
-                ["rust_analyzer"] = function ()
+                ["rust_analyzer"] = function()
                     local rt = require("rust-tools")
                     local mason_registry = require("mason-registry")
 
@@ -127,13 +128,17 @@ return {
                                 on_attach(_, bufnr)
                                 vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
                                 -- Code action groups
-                                vim.keymap.set("n", "<Leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
+                                vim.keymap.set(
+                                    "n",
+                                    "<Leader>ca",
+                                    rt.code_action_group.code_action_group,
+                                    { buffer = bufnr })
                             end,
                             capabilities = capabilities
                         },
                     }
                 end,
-                ["lua_ls"] = function ()
+                ["lua_ls"] = function()
                     lspconfig.lua_ls.setup {
                         settings = {
                             Lua = {
@@ -149,7 +154,5 @@ return {
         vim.diagnostic.config({
             virtual_text = true,
         })
-
     end
 }
-
