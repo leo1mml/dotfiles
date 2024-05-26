@@ -138,6 +138,16 @@ return {
                         },
                     }
                 end,
+                ["omnisharp"] = function()
+                    lspconfig.omnisharp.setup {
+                        on_attach = function(client, bufnr)
+                            on_attach(client, bufnr)
+                            client
+                            .server_capabilities
+                            .semanticTokensProvider = nil
+                        end
+                    }
+                end,
                 ["lua_ls"] = function()
                     lspconfig.lua_ls.setup {
                         settings = {
