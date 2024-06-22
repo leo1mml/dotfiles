@@ -1,6 +1,7 @@
 return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = {
+        "Decodetalkers/csharpls-extended-lsp.nvim",
         "simrat39/rust-tools.nvim",
         'nvim-lua/plenary.nvim',
         'mfussenegger/nvim-dap',
@@ -23,6 +24,7 @@ return {
         local cmp_nvim_lsp = require("cmp_nvim_lsp")
         local keymap = vim.keymap -- for conciseness
         local opts = { noremap = true, silent = true }
+
         require 'lspconfig'.gdscript.setup {
             on_attach = function(client)
                 local _notify = client.notify
@@ -36,9 +38,11 @@ return {
             end
         }
 
+
+
         require 'lspconfig'.sourcekit.setup {}
 
-        local on_attach = function(client, bufnr)
+        local on_attach = function(_, bufnr)
             opts.buffer = bufnr
 
             -- set keybinds
@@ -92,6 +96,7 @@ return {
             local hl = "DiagnosticSign" .. type
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
         end
+
         masonlspconfig.setup {
             ensure_installed = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls' },
             automatic_installation = true,
@@ -138,16 +143,6 @@ return {
                         },
                     }
                 end,
-                ["omnisharp"] = function()
-                    lspconfig.omnisharp.setup {
-                        on_attach = function(client, bufnr)
-                            on_attach(client, bufnr)
-                            client
-                            .server_capabilities
-                            .semanticTokensProvider = nil
-                        end
-                    }
-                end,
                 ["lua_ls"] = function()
                     lspconfig.lua_ls.setup {
                         settings = {
@@ -159,6 +154,17 @@ return {
                         }
                     }
                 end,
+                ["csharp_ls"] = function()
+                    lspconfig.csharp_ls.setup {
+                        on_attach = on_attach,
+                        capabilities = capabilities,
+                        handlers = {
+                            ["textDocument/definition"] = require('csharpls_extended').handler,
+                            ["textDocument/typeDefinition"] = require('csharpls_extended').handler,
+                        },
+                    }
+                end,
+
             },
         }
         vim.diagnostic.config({
