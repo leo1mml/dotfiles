@@ -5,7 +5,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.g.godot_executable = '~/Documents/Godot/Client/Godot.64'
+vim.g.godot_executable = '/usr/bin/godot-mono'
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
