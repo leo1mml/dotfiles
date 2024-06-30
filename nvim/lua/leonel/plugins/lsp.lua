@@ -1,7 +1,6 @@
 return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = {
-        "Decodetalkers/csharpls-extended-lsp.nvim",
         "simrat39/rust-tools.nvim",
         'nvim-lua/plenary.nvim',
         'mfussenegger/nvim-dap',
@@ -15,6 +14,7 @@ return {
         'hrsh7th/nvim-cmp',
         { "antosha417/nvim-lsp-file-operations", config = true },
         'L3MON4D3/LuaSnip',
+        'Hoffs/omnisharp-extended-lsp.nvim',
     },
     config = function()
         local mason = require("mason")
@@ -25,65 +25,30 @@ return {
         local keymap = vim.keymap -- for conciseness
         local opts = { noremap = true, silent = true }
 
-        require 'lspconfig'.gdscript.setup {
-            on_attach = function(client)
-                local _notify = client.notify
-                client.notify = function(method, params)
-                    if method == 'textDocument/didClose' then
-                        -- Godot doesn't implement didClose yet
-                        return
-                    end
-                    _notify(method, params)
-                end
-            end
-        }
-
-
-
-        require 'lspconfig'.sourcekit.setup {}
 
         local on_attach = function(_, bufnr)
-            opts.buffer = bufnr
-
-            -- set keybinds
-            opts.desc = "Show LSP references"
-            keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
-
-            opts.desc = "Go to declaration"
+            local opts = { buffer = bufnr, remap = false }
+            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
             keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
-
-            opts.desc = "Show LSP definitions"
-            keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
-
-            opts.desc = "Show LSP implementations"
-            keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
-
-            opts.desc = "Show LSP type definitions"
-            keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
-
-            opts.desc = "See available code actions"
-            keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
-
-            opts.desc = "Smart rename"
-            keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
-
+            vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, opts)
+            vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
+            vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, opts)
+            vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, opts)
+            vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+            keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)        -- show lsp implementations
+            keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)       -- show lsp type definitions
             opts.desc = "Show buffer diagnostics"
             keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
-
             opts.desc = "Show line diagnostics"
-            keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
-
+            keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)                -- show diagnostics for line
             opts.desc = "Go to previous diagnostic"
-            keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-
+            keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)                        -- jump to previous diagnostic in buffer
             opts.desc = "Go to next diagnostic"
-            keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
-
+            keymap.set("n", "]d", vim.diagnostic.goto_next, opts)                        -- jump to next diagnostic in buffer
             opts.desc = "Show documentation for what is under cursor"
-            keymap.set("n", "K", '<cmd>Lspsaga hover_doc<CR>') -- show documentation for what is under cursor
-
+            keymap.set("n", "K", '<cmd>Lspsaga hover_doc<CR>')                           -- show documentation for what is under cursor
             opts.desc = "Restart LSP"
-            keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+            keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)                       -- mapping to restart lsp if necessary
         end
 
         -- used to enable autocompletion (assign to every lsp server config)
@@ -154,17 +119,50 @@ return {
                         }
                     }
                 end,
-                ["csharp_ls"] = function()
-                    lspconfig.csharp_ls.setup {
-                        on_attach = on_attach,
-                        capabilities = capabilities,
-                        handlers = {
-                            ["textDocument/definition"] = require('csharpls_extended').handler,
-                            ["textDocument/typeDefinition"] = require('csharpls_extended').handler,
+                ["omnisharp"] = function()
+                    lspconfig.omnisharp.setup {
+                        cmd = {
+                            "omnisharp",
+                            "--languageserver",
+                            "--hostPID",
+                            tostring(vim.fn.getpid())
                         },
+                        capabilities = capabilities,
+                        on_attach = on_attach,
+                        settings = {
+                            RoslynExtensionsOptions = {
+                                enableDecompilationSupport = false,
+                                enableImportCompletion = true,
+                                enableAnalyzersSupport = true,
+                            }
+                        },
+                        root_dir = lspconfig.util.root_pattern("*.sln"),
+                        handlers = {
+                            ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
+                            ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
+                            ["textDocument/references"] = require('omnisharp_extended').references_handler,
+                            ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
+                        }
                     }
                 end,
-
+                ["gdscript"] = function()
+                    lspconfig.gdscript.setup {
+                        on_attach = function(client, bufnr)
+                            on_attach(client, bufnr)
+                            local _notify = client.notify
+                            client.notify = function(method, params)
+                                if method == 'textDocument/didClose' then
+                                    -- Godot doesn't implement didClose yet
+                                    return
+                                end
+                                _notify(method, params)
+                            end
+                        end
+                    }
+                end,
+                ["sourcekit"] = function()
+                    lspconfig.sourcekit.setup {}
+                end,
             },
         }
         vim.diagnostic.config({
