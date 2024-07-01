@@ -1,0 +1,10 @@
+eval "$(starship init zsh)"
+eval "$(rbenv init - zsh)"
+
+
+export PATH=$PATH:/home/leo1mml/dotfiles/bin
+alias lf=ueberwrap
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+# Created by `pipx` on 2024-06-25 09:54:57
+export PATH="$PATH:/Users/leonel.siemens/.local/bin"
