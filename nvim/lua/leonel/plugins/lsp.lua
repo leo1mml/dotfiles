@@ -62,6 +62,28 @@ return {
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
         end
 
+        lspconfig.sourcekit.setup {
+            capabilities = capabilities,
+            on_attach = on_attach,
+        }
+
+
+        lspconfig.gdscript.setup {
+            capabilities = capabilities,
+            on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                local _notify = client.notify
+                client.notify = function(method, params)
+                    if method == 'textDocument/didClose' then
+                        -- Godot doesn't implement didClose yet
+                        return
+                    end
+                    _notify(method, params)
+                end
+            end
+        }
+
+
         masonlspconfig.setup {
             ensure_installed = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls' },
             automatic_installation = true,
@@ -144,24 +166,6 @@ return {
                             ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
                         }
                     }
-                end,
-                ["gdscript"] = function()
-                    lspconfig.gdscript.setup {
-                        on_attach = function(client, bufnr)
-                            on_attach(client, bufnr)
-                            local _notify = client.notify
-                            client.notify = function(method, params)
-                                if method == 'textDocument/didClose' then
-                                    -- Godot doesn't implement didClose yet
-                                    return
-                                end
-                                _notify(method, params)
-                            end
-                        end
-                    }
-                end,
-                ["sourcekit"] = function()
-                    lspconfig.sourcekit.setup {}
                 end,
             },
         }
