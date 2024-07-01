@@ -3,7 +3,7 @@ vim.opt.guicursor = ""
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
-vim.opt.scrolloff = 20
+vim.opt.scrolloff = 10
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
