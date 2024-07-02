@@ -23,8 +23,6 @@ return {
         local lspconfig = require("lspconfig")
         local cmp_nvim_lsp = require("cmp_nvim_lsp")
         local keymap = vim.keymap -- for conciseness
-        local opts = { noremap = true, silent = true }
-
 
         local on_attach = function(_, bufnr)
             local opts = { buffer = bufnr, remap = false }
@@ -32,7 +30,7 @@ return {
             keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
             vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, opts)
             vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
-            vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, opts)
+            vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
             vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, opts)
             vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
             keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)        -- show lsp implementations
