@@ -20,7 +20,7 @@ style = "Regular"
 
 [window]
 blur = true
-opacity = 0.95
+opacity = 0.8
 
 [window.padding]
 x = 0
