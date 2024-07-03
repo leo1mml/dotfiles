@@ -1,5 +1,6 @@
 return {
     "williamboman/mason-lspconfig.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
         "simrat39/rust-tools.nvim",
         'nvim-lua/plenary.nvim',
