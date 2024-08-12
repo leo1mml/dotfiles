@@ -1,15 +1,17 @@
 return {
     "nvim-neorg/neorg",
-    dependencies = { "luarocks.nvim" },
-    lazy = false,
-    verson = "9.0.0",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+        { "<Leader>nt", "<cmd>Neorg journal today<cr>" },
+        { "<Leader>nC", "<cmd>Neorg journal custom<cr>" },
+    },
     config = function()
         require("neorg").setup {
             load = {
-                ["core.defaults"] = {},
-                ["core.concealer"] = {},
-                ["core.ui"] = {},
-                ["core.dirman"] = {
+                ["core.defaults"] = {},  -- Loads default behaviour
+                ["core.concealer"] = {}, -- Adds pretty icons to your documents
+                ["core.dirman"] = {      -- Manages Neorg workspaces
                     config = {
                         workspaces = {
                             notes = "~/notes/personal",
@@ -20,13 +22,5 @@ return {
                 },
             },
         }
-
-        vim.wo.foldlevel = 99
-        vim.wo.conceallevel = 2
-
-        vim.keymap.set("n", "<leader>nt", "<cmd>Neorg journal today<CR>")    -- Open Today's Note
-        vim.keymap.set("n", "<leader>nc", "<cmd>Neorg toggle-concealer<CR>") -- Open Neorg Calendar
-        vim.keymap.set("n", "<leader>nC", "<cmd>Neorg journal custom<CR>")   -- Open Neorg Calendar
     end,
-
 }
