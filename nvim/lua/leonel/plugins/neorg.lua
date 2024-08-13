@@ -1,10 +1,10 @@
 return {
     "nvim-neorg/neorg",
-    build = ":Neorg sync-parsers",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    lazy = false,
+    version = "*",
     keys = {
-        { "<Leader>nt", "<cmd>Neorg journal today<cr>" },
-        { "<Leader>nC", "<cmd>Neorg journal custom<cr>" },
+        { "<Leader>nt", "<cmd>Neorg journal today<cr>",  { desc = "Today personal note" } },
+        { "<Leader>nC", "<cmd>Neorg journal custom<cr>", { desc = "Select date personal note" } },
     },
     config = function()
         require("neorg").setup {
