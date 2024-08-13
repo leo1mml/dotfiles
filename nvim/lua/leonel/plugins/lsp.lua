@@ -27,27 +27,50 @@ return {
 
         local on_attach = function(_, bufnr)
             local opts = { buffer = bufnr, remap = false }
+            opts.desc = "Go to definition"
             vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+
+            opts.desc = "Go to declaration"
             keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+
+            opts.desc = "Workspace symbol"
             vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, opts)
+
+            opts.desc = "Code Action"
             vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
+
+            opts.desc = "Go to references"
             vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+
+            opts.desc = "Rename"
             vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, opts)
+
+            opts.desc = "Signature Help"
             vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-            keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)        -- show lsp implementations
-            keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)       -- show lsp type definitions
-            opts.desc = "Show buffer diagnostics"
+
+            opts.desc = "Go to implementations"
+            keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+
+            opts.desc = "Go to type definitions"
+            keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+
+            opts.desc = "Go to Telescope diagnostics for buffer"
             keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+
             opts.desc = "Show line diagnostics"
-            keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)                -- show diagnostics for line
+            keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+
             opts.desc = "Go to previous diagnostic"
-            keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)                        -- jump to previous diagnostic in buffer
+            keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
+
             opts.desc = "Go to next diagnostic"
-            keymap.set("n", "]d", vim.diagnostic.goto_next, opts)                        -- jump to next diagnostic in buffer
+            keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
+
             opts.desc = "Show documentation for what is under cursor"
-            keymap.set("n", "K", '<cmd>Lspsaga hover_doc<CR>')                           -- show documentation for what is under cursor
+            keymap.set("n", "K", '<cmd>Lspsaga hover_doc<CR>') -- show documentation for what is under cursor
+
             opts.desc = "Restart LSP"
-            keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)                       -- mapping to restart lsp if necessary
+            keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
         end
 
         -- used to enable autocompletion (assign to every lsp server config)
