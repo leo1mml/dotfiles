@@ -7,4 +7,5 @@ alias lf=ueberwrap
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # Created by `pipx` on 2024-06-25 09:54:57
-export PATH="$PATH:/Users/leonel.siemens/.local/bin"
+export PATH="$PATH:~/.local/bin"
+export PATH="$PATH:~/tools/codelldb-aarch64-darwin/extension/adapter/"
