@@ -150,7 +150,7 @@
 		"format": "{icon}",
 		"rotate": 0,
 		"icon-size": 25,
-		"icon-theme": "Gruvbox-Plus-Dark",
+		"icon-theme": "Tela-circle-purple",
         "spacing": 0,
 		"tooltip-format": "{title}",
 		"on-click": "activate",
