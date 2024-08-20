@@ -2,6 +2,7 @@
 sudo ln -s ~/dotfiles/logid.cfg /etc/
 ln -s ~/dotfiles/.zshrc ~/.zshrc
 ln -s ~/dotfiles/starship.toml ~/.config/starship.toml
+ln -s ~/dotfiles/yazi ~/.config/yazi
 ln -s ~/dotfiles/hypr ~/.config/hypr
 ln -s ~/dotfiles/kitty ~/.config/kitty
 ln -s ~/dotfiles/nvim ~/.config/nvim
