@@ -29,6 +29,11 @@ return {
     format_on_save = { timeout_ms = 500, lsp_fallback = true },
     -- Customize formatters
     formatters = {
+      swiftformat = {
+        command = 'swiftformat',
+        args = { '--disable', 'trailingCommas, wrapMultilineStatementBraces, sortImports, unusedArguments', '--stdinpath', '$FILENAME' },
+        stdin = true,
+      },
       shfmt = {
         prepend_args = { "-i", "2" },
       },
