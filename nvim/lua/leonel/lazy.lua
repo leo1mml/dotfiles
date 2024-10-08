@@ -12,6 +12,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({ { import = "leonel.plugins" } }, {
+  defaults = {
+    version = "*",
+  },
   install = {
     colorscheme = { "tokyonight" },
   }
