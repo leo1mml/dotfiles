@@ -2,7 +2,11 @@ return {
     "williamboman/mason-lspconfig.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-        "simrat39/rust-tools.nvim",
+        {
+            'mrcjkb/rustaceanvim',
+            version = '^5', -- Recommended
+            lazy = false,   -- This plugin is already lazy
+        },
         'nvim-lua/plenary.nvim',
         'mfussenegger/nvim-dap',
         "neovim/nvim-lspconfig",
@@ -67,10 +71,14 @@ return {
             keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
 
             opts.desc = "Show documentation for what is under cursor"
-            keymap.set("n", "K", '<cmd>Lspsaga hover_doc<CR>') -- show documentation for what is under cursor
+            keymap.set("n", "K", vim.lsp.buf.hover) -- show documentation for what is under cursor
 
             opts.desc = "Restart LSP"
             keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+            -- rustaceanvim
+            opts.desc = "Rust Tests"
+            keymap.set("n", "<Leader>dt", "<cmd>lua vim.cmd('RustLsp testables')<CR>", { desc = "Debugger testables" })
         end
 
         -- used to enable autocompletion (assign to every lsp server config)
@@ -118,7 +126,6 @@ return {
                 end,
                 -- Next, you can provide targeted overrides for specific servers.
                 ["rust_analyzer"] = function()
-                    local rt = require("rust-tools")
                     local mason_registry = require("mason-registry")
 
                     local codelldb = mason_registry.get_package("codelldb")
@@ -126,31 +133,18 @@ return {
                     local codelldb_path = extension_path .. "adapter/codelldb"
                     local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
 
-                    rt.setup {
-
-                        server = {
+                    vim.g.rustaceanvim = function()
+                        local cfg = require('rustaceanvim.config')
+                        return {
+                            server = {
+                                on_attach = on_attach,
+                                capabilities = capabilities
+                            },
                             dap = {
-                                adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+                                adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
                             },
-                            tools = {
-                                hover_actions = {
-                                    auto_focus = true,
-                                },
-                            },
-                            on_attach = function(_, bufnr)
-                                -- Hover actions
-                                on_attach(_, bufnr)
-                                vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
-                                -- Code action groups
-                                vim.keymap.set(
-                                    "n",
-                                    "<Leader>ca",
-                                    rt.code_action_group.code_action_group,
-                                    { buffer = bufnr })
-                            end,
-                            capabilities = capabilities
-                        },
-                    }
+                        }
+                    end
                 end,
                 ["lua_ls"] = function()
                     lspconfig.lua_ls.setup {
