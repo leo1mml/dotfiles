@@ -8,5 +8,4 @@ ln -s ~/dotfiles/kitty ~/.config/kitty
 ln -s ~/dotfiles/nvim ~/.config/nvim
 ln -s ~/dotfiles/wofi ~/.config/wofi
 ln -s ~/dotfiles/waybar ~/.config/waybar
-ln -s ~/dotfiles/spotify-tui ~/.config/spotify-tui
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
