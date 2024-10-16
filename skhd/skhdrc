@@ -79,3 +79,7 @@ shift + alt - 0 : yabai -m window --space 10;
 ctrl + alt - q : yabai --stop-service
 ctrl + alt - s : yabai --start-service
 ctrl + alt - r : yabai --restart-service
+
+# Apps
+cmd + shift - t : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
+cmd + shift - b : open -n /Applications/Firefox.app
