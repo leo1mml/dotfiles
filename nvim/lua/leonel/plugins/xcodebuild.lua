@@ -38,5 +38,22 @@ return {
 
     vim.keymap.set("n", "<leader>xx", "<cmd>XcodebuildQuickfixLine<cr>", { desc = "Quickfix Line" })
     vim.keymap.set("n", "<leader>xa", "<cmd>XcodebuildCodeActions<cr>", { desc = "Show Code Actions" })
+
+
+    -- Debug stuff
+    local xcodebuild = require("xcodebuild.integrations.dap")
+
+    -- TODO: change it to your local codelldb path
+    local codelldbPath = os.getenv("HOME") .. "/tools/codelldb-aarch64-darwin/extension/adapter/codelldb"
+
+    xcodebuild.setup(codelldbPath)
+
+    vim.keymap.set("n", "<leader>Xdd", xcodebuild.build_and_debug, { desc = "Build & Debug" })
+    vim.keymap.set("n", "<leader>Xdr", xcodebuild.debug_without_build, { desc = "Debug Without Building" })
+    vim.keymap.set("n", "<leader>Xdt", xcodebuild.debug_tests, { desc = "Debug Tests" })
+    vim.keymap.set("n", "<leader>XdT", xcodebuild.debug_class_tests, { desc = "Debug Class Tests" })
+    vim.keymap.set("n", "<leader>Xdb", xcodebuild.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+    vim.keymap.set("n", "<leader>XdB", xcodebuild.toggle_message_breakpoint, { desc = "Toggle Message Breakpoint" })
+    vim.keymap.set("n", "<leader>Xdx", xcodebuild.terminate_session, { desc = "Terminate Debugger" })
   end,
 }
