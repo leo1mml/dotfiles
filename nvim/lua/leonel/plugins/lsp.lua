@@ -95,6 +95,7 @@ return {
         lspconfig.sourcekit.setup {
             capabilities = capabilities,
             on_attach = on_attach,
+            filetypes = { "swift", "objc", "m", "h" }
         }
 
 
@@ -115,7 +116,7 @@ return {
 
 
         masonlspconfig.setup {
-            ensure_installed = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls' },
+            ensure_installed = { 'rust_analyzer', 'pyright', 'tsserver', 'lua_ls' },
             automatic_installation = true,
             handlers = {
                 function(server_name) -- default handler (optional)
