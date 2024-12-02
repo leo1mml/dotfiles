@@ -1,77 +1,56 @@
--- Gitsigns
--- See `:help gitsigns.txt`
 return {
-  'lewis6991/gitsigns.nvim',
-  config = function()
-    local gitsigns = require('gitsigns')
-    gitsigns.setup {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    }
-  end,
-  keys = {
-    { '<leader>gs', "<cmd>Gitsigns stage_hunk<cr>", { desc = "Stage Hunk" } },
-    { '<leader>gr', "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset Hunk" } },
-    {
-      '<leader>gs',
-      function()
-        require('gitsigns').stage_hunk { vim.fn.line('.'), vim.fn.line('v') }
-      end,
-      mode = 'v',
-      { desc = "Stage Selected" }
+  "lewis6991/gitsigns.nvim",
+  opts = {
+    signs = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
+      untracked = { text = "▎" },
     },
-    {
-      '<leader>gr',
-      function()
-        require('gitsigns').reset_hunk { vim.fn.line('.'), vim.fn.line('v') }
-      end,
-      mode = 'v',
-      { desc = "Reset Selected" }
+    signs_staged = {
+      add = { text = "▎" },
+      change = { text = "▎" },
+      delete = { text = "" },
+      topdelete = { text = "" },
+      changedelete = { text = "▎" },
     },
-    { '<leader>gS', "<cmd>Gitsigns stage_buffer<cr>",    { desc = "Stage Buffer" } },
-    { '<leader>gu', "<cmd>Gitsigns undo_stage_hunk<cr>", { desc = "Undo Stage" } },
-    { '<leader>gR', "<cmd>Gitsigns reset_buffer<cr>",    { desc = "Reset Buffer" } },
-    { '<leader>gp', "<cmd>Gitsigns preview_hunk<cr>",    { desc = "Preview Hunk" } },
-    { '<leader>gb',
-      function()
-        require('gitsigns').blame_line { full = true }
-      end
-    },
-    { '<leader>gb', "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle line blame" } },
-    { '<leader>gd', "<cmd>Gitsigns diffthis<cr>",                  { desc = "Diff this" } },
-    { '<leader>gD',
-      function()
-        require('gitsigns').diffthis('~')
-      end,
-      { desc = "Diff file" }
-    },
-    { '<leader>gd', "<cmd>Gitsigns toggle_deleted<cr>", { desc = "Toggle Deleted" } },
-    { 'ih',         ':<C-U>Gitsigns select_hunk<CR>',   mode = { 'o', 'x' },        { desc = "Select Hunk" } },
+    on_attach = function(buffer)
+      local gs = package.loaded.gitsigns
 
-    { ']c',
-      function()
+      local function map(mode, l, r, desc)
+        vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+      end
+
+      -- stylua: ignore start
+      map("n", "]h", function()
         if vim.wo.diff then
-          vim.cmd.normal({ ']c', bang = true })
+          vim.cmd.normal({ "]c", bang = true })
         else
-          require('gitsigns').nav_hunk('next')
+          gs.nav_hunk("next")
         end
-      end,
-      { desc = "Next Hunk" }
-    },
-    { '[c',
-      function()
+      end, "Next Hunk")
+      map("n", "[h", function()
         if vim.wo.diff then
-          vim.cmd.normal({ '[c', bang = true })
+          vim.cmd.normal({ "[c", bang = true })
         else
-          require('gitsigns').nav_hunk('prev')
+          gs.nav_hunk("prev")
         end
-      end,
-      { desc = "Previous Hunk" }
-    },
+      end, "Prev Hunk")
+      map("n", "]H", function() gs.nav_hunk("last") end, "Last Hunk")
+      map("n", "[H", function() gs.nav_hunk("first") end, "First Hunk")
+      map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
+      map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+      map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
+      map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
+      map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
+      map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
+      map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
+      map("n", "<leader>ghB", function() gs.blame() end, "Blame Buffer")
+      map("n", "<leader>ghd", gs.diffthis, "Diff This")
+      map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+      map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+    end,
   },
 }
