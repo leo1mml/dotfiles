@@ -12,11 +12,6 @@ return {
       code_coverage = {
         enabled = true,
       },
-      integrations = {
-        pymobiledevice = {
-          enabled = true,
-        },
-      },
       show_build_progress_bar = false,
       logs = {
         notify = function(message, severity)
@@ -80,7 +75,8 @@ return {
     local xcodebuild = require("xcodebuild.integrations.dap")
 
     -- TODO: change it to your local codelldb path
-    local codelldbPath = "~/tools/codelldb-aarch64-darwin/extension/adapter/codelldb"
+    --codelldb-darwin-arm64
+    local codelldbPath = "~/bin/codelldb-darwin-arm64/extension/adapter/codelldb"
 
     xcodebuild.setup(codelldbPath)
 
