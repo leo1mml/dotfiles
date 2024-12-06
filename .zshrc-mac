@@ -9,3 +9,7 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # Created by `pipx` on 2024-06-25 09:54:57
 export PATH="$PATH:~/.local/bin"
 export PATH="$PATH:~/tools/codelldb-aarch64-darwin/extension/adapter/"
+if [ -f ~/.env ]; then
+    . ~/.env
+fi
+eval "$(zellij setup --generate-auto-start zsh)"
