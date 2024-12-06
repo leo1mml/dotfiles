@@ -20,15 +20,15 @@ end tell'
 '''
 
 # i3 wraps focus by default
-cmd-j =         'focus --boundaries-action wrap-around-the-workspace down'
-cmd-k =         'focus --boundaries-action wrap-around-the-workspace up'
-cmd-l =         'focus --boundaries-action wrap-around-the-workspace right'
+cmd-j = 'focus --boundaries-action wrap-around-the-workspace down'
+cmd-k = 'focus --boundaries-action wrap-around-the-workspace up'
+cmd-l = 'focus --boundaries-action wrap-around-the-workspace right'
 cmd-h = 'focus --boundaries-action wrap-around-the-workspace left'
 
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
-alt-shift-h = 'move left'
+shift-alt-j = 'move down'
+shift-alt-k = 'move up'
+shift-alt-l = 'move right'
+shift-alt-h = 'move left'
 
 # Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
 shift-alt-s = 'split horizontal'
@@ -36,11 +36,11 @@ shift-alt-v = 'split vertical'
 
 cmd-alt-f = 'fullscreen'
 
-cmd-alt-s = 'layout v_accordion' # 'layout stacking' in i3
-cmd-alt-w = 'layout h_accordion' # 'layout tabbed' in i3
+cmd-alt-s = 'layout v_accordion'               # 'layout stacking' in i3
+cmd-alt-w = 'layout h_accordion'               # 'layout tabbed' in i3
 cmd-alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
 
-alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+shift-alt-space = 'layout floating tiling' # 'floating toggle' in i3
 
 # Not supported, because this command is redundant in AeroSpace mental model.
 # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
@@ -61,18 +61,18 @@ cmd-alt-8 = 'workspace 8'
 cmd-alt-9 = 'workspace 9'
 cmd-alt-0 = 'workspace 10'
 
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
+shift-alt-1 = 'move-node-to-workspace 1'
+shift-alt-2 = 'move-node-to-workspace 2'
+shift-alt-3 = 'move-node-to-workspace 3'
+shift-alt-4 = 'move-node-to-workspace 4'
+shift-alt-5 = 'move-node-to-workspace 5'
+shift-alt-6 = 'move-node-to-workspace 6'
+shift-alt-7 = 'move-node-to-workspace 7'
+shift-alt-8 = 'move-node-to-workspace 8'
+shift-alt-9 = 'move-node-to-workspace 9'
+shift-alt-0 = 'move-node-to-workspace 10'
 
-alt-shift-c = 'reload-config'
+shift-alt-c = 'reload-config'
 
 cmd-alt-r = 'mode resize'
 
@@ -86,8 +86,8 @@ esc = 'mode main'
 
 [gaps]
 inner.horizontal = 10
-inner.vertical =   10
-outer.left =       10
-outer.bottom =     10
-outer.top =        10
-outer.right =      10
+inner.vertical = 10
+outer.left = 10
+outer.bottom = 10
+outer.top = 10
+outer.right = 10
