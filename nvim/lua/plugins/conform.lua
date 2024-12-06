@@ -26,14 +26,14 @@ return {
       swift = { "swiftformat" },
     },
     -- Set up format-on-save
-    format_on_save = { timeout_ms = 500, lsp_fallback = true },
+    -- format_on_save = { timeout_ms = 500, lsp_fallback = true },
     -- Customize formatters
     formatters = {
       swiftformat = {
         command = "swiftformat",
         args = {
           "--disable",
-          "trailingCommas, wrapMultilineStatementBraces, sortImports, unusedArguments",
+          "trailingCommas, wrapMultilineStatementBraces, wrapMultilineConditionalAssignment, sortImports, unusedArguments",
           "--stdinpath",
           "$FILENAME",
         },
