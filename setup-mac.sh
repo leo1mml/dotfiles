@@ -5,4 +5,5 @@ ln -s ~/dotfiles/starship.toml ~/.config/starship.toml
 ln -s ~/dotfiles/kitty ~/.config/kitty
 ln -s ~/dotfiles/alacritty ~/.config/alacritty
 ln -s ~/dotfiles/aerospace/ ~/.config/aerospace
+ln -s ~/dotfiles/zellij/ ~/.config/zellij
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
