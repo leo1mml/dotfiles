@@ -15,8 +15,8 @@ return {
       build = ":MasonUpdate", -- :MasonUpdate updates registry contents
     },
     "williamboman/mason-lspconfig.nvim",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/nvim-cmp",
+    -- "hrsh7th/cmp-nvim-lsp",
+    -- "hrsh7th/nvim-cmp",
     { "antosha417/nvim-lsp-file-operations", config = true },
     "L3MON4D3/LuaSnip",
     "Hoffs/omnisharp-extended-lsp.nvim",
@@ -26,7 +26,7 @@ return {
     mason.setup()
     local masonlspconfig = require("mason-lspconfig")
     local lspconfig = require("lspconfig")
-    local cmp_nvim_lsp = require("cmp_nvim_lsp")
+    -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
     local keymap = vim.keymap -- for conciseness
 
     local on_attach = function(_, bufnr)
@@ -92,7 +92,7 @@ return {
     end
 
     -- used to enable autocompletion (assign to every lsp server config)
-    local capabilities = cmp_nvim_lsp.default_capabilities()
+    -- local capabilities = cmp_nvim_lsp.default_capabilities()
 
     -- Change the Diagnostic symbols in the sign column (gutter)
     -- (not in youtube nvim video)
@@ -103,13 +103,13 @@ return {
     end
 
     lspconfig.sourcekit.setup({
-      capabilities = capabilities,
+      -- capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { "swift", "objc", "m", "h" },
     })
 
     lspconfig.gdscript.setup({
-      capabilities = capabilities,
+      -- capabilities = capabilities,
       on_attach = function(client, bufnr)
         on_attach(client, bufnr)
         local _notify = client.notify
@@ -129,7 +129,7 @@ return {
       handlers = {
         function(server_name) -- default handler (optional)
           lspconfig[server_name].setup({
-            capabilities = capabilities,
+            -- capabilities = capabilities,
             on_attach = on_attach,
           })
         end,
@@ -147,7 +147,7 @@ return {
             return {
               server = {
                 on_attach = on_attach,
-                capabilities = capabilities,
+                -- capabilities = capabilities,
               },
               dap = {
                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
@@ -174,7 +174,7 @@ return {
               "--hostPID",
               tostring(vim.fn.getpid()),
             },
-            capabilities = capabilities,
+            -- capabilities = capabilities,
             on_attach = on_attach,
             settings = {
               RoslynExtensionsOptions = {
