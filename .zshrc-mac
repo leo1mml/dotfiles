@@ -12,4 +12,3 @@ export PATH="$PATH:~/tools/codelldb-aarch64-darwin/extension/adapter/"
 if [ -f ~/.env ]; then
     . ~/.env
 fi
-eval "$(zellij setup --generate-auto-start zsh)"
