@@ -113,6 +113,7 @@ f11 = 'fullscreen'
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 cmd-shift-m = 'mode manage'
 cmd-shift-r = 'mode resize'
+cmd-shift-e = 'mode empty'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 cmd-h = 'focus left'
@@ -127,13 +128,13 @@ cmd-shift-k = 'move up'
 cmd-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-cmd-shift-minus = 'resize smart -50'
-cmd-shift-equal = 'resize smart +50'
+cmd-shift-minus = 'resize smart -40'
+cmd-shift-equal = 'resize smart +40'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 cmd-1 = 'workspace 1'
 cmd-2 = 'workspace 2'
-cmd-3 = 'workspace 3'
+cmd-3 = ['workspace 3', 'mode empty']
 cmd-4 = 'workspace 4'
 cmd-5 = 'workspace 5'
 cmd-6 = 'workspace 6'
@@ -143,16 +144,16 @@ cmd-9 = 'workspace 9'
 cmd-0 = 'workspace 10'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-cmd-shift-1 = 'move-node-to-workspace 1'
-cmd-shift-2 = 'move-node-to-workspace 2'
-cmd-shift-3 = 'move-node-to-workspace 3'
-cmd-shift-4 = 'move-node-to-workspace 4'
-cmd-shift-5 = 'move-node-to-workspace 5'
-cmd-shift-6 = 'move-node-to-workspace 6'
-cmd-shift-7 = 'move-node-to-workspace 7'
-cmd-shift-8 = 'move-node-to-workspace 8'
-cmd-shift-9 = 'move-node-to-workspace 9'
-cmd-shift-0 = 'move-node-to-workspace 10'
+cmd-alt-1 = 'move-node-to-workspace 1'
+cmd-alt-2 = 'move-node-to-workspace 2'
+cmd-alt-3 = 'move-node-to-workspace 3'
+cmd-alt-4 = 'move-node-to-workspace 4'
+cmd-alt-5 = 'move-node-to-workspace 5'
+cmd-alt-6 = 'move-node-to-workspace 6'
+cmd-alt-7 = 'move-node-to-workspace 7'
+cmd-alt-8 = 'move-node-to-workspace 8'
+cmd-alt-9 = 'move-node-to-workspace 9'
+cmd-alt-0 = 'move-node-to-workspace 10'
 
 cmd-ctrl-1 = ['move-node-to-workspace 1', 'workspace 1']
 cmd-ctrl-2 = ['move-node-to-workspace 2', 'workspace 2']
@@ -190,21 +191,36 @@ k = ['join-with up', 'mode main']
 l = ['join-with right', 'mode main']
 
 [mode.resize.binding]
-h = 'resize width -50'
-j = 'resize height +50'
-k = 'resize height -50'
-l = 'resize width +50'
+h = 'resize width -40'
+j = 'resize height +40'
+k = 'resize height -40'
+l = 'resize width +40'
 enter = 'mode main'
 esc = 'mode main'
 
-[[on-window-detected]]
-if.app-id = 'org.qutebrowser.qutebrowser'
-run = 'layout tiling'
+[mode.empty.binding]
+cmd-esc = 'mode main'
 
 [[on-window-detected]]
 if.app-id = 'org.alacritty'
 run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
-if.app-id = 'mozilla.firefox.Firefox'
+if.app-id = 'org.mozilla.Firefox'
 run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.dt.Xcode'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'microsoft.outlook.Outlok'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'microsoft.teams.Teams'
+run = 'move-node-to-workspace 7'
