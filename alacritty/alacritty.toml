@@ -1,5 +1,7 @@
-general.import = [
-  "/usr/lib/node_modules/alacritty-themes/themes/Tokyonight_Night.toml"
+
+[general]
+import = [
+  "/opt/homebrew/lib/node_modules/alacritty-themes/themes/Tokyonight_Storm.toml"
 ]
 
 [font.bold]
@@ -23,6 +25,6 @@ option_as_alt = "Both"
 blur = true
 opacity = 1
 
-[window.padding]
-x = 0
-y = 10
+  [window.padding]
+  x = 0
+  y = 10
