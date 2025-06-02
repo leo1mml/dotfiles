@@ -106,6 +106,7 @@ return {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			filetypes = { "swift", "objc", "m", "h" },
+			cmd = lsp == "sourcekit" and { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) } or nil,
 		})
 
 		lspconfig.gdscript.setup({
