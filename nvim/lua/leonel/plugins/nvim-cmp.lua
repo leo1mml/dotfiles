@@ -50,6 +50,7 @@ return {
         { name = "buffer" },  -- text within current buffer
         { name = "path" },    -- file system paths
         { name = "neorg" },
+        { name = "emoji" },
       }),
       -- configure lspkind for vs-code like pictograms in completion menu
 
