@@ -1,13 +1,7 @@
 return {
 	-- Ensure mason-lspconfig.nvim is listed only once
 	"williamboman/mason-lspconfig.nvim",
-	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		{
-			"mrcjkb/rustaceanvim",
-			version = "^6", -- Recommended
-			lazy = false, -- This plugin is already lazy
-		},
 		"nvim-lua/plenary.nvim",
 		"mfussenegger/nvim-dap",
 		"neovim/nvim-lspconfig",
@@ -29,43 +23,13 @@ return {
 		local masonlspconfig = require("mason-lspconfig")
 		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-		local keymap = vim.keymap -- for conciseness
 
 		-- Define a common on_attach function for all LSP servers
 		local on_attach = function(client, bufnr)
 			local opts = { buffer = bufnr, remap = false }
 
+			local keymap = vim.keymap
 			-- Keymaps for LSP functionalities
-			opts.desc = "Go to definition"
-			keymap.set("n", "gd", function()
-				vim.lsp.buf.definition()
-			end, opts)
-
-			opts.desc = "Go to declaration"
-			keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-
-			opts.desc = "Workspace symbol"
-			keymap.set("n", "<leader>ws", function()
-				vim.lsp.buf.workspace_symbol()
-			end, opts)
-
-			opts.desc = "Code Action"
-			keymap.set("n", "<leader>ca", function()
-				vim.lsp.buf.code_action()
-			end, opts)
-
-			opts.desc = "Go to references"
-			keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
-
-			opts.desc = "Rename"
-			keymap.set("n", "<leader>rn", function()
-				vim.lsp.buf.rename()
-			end, opts)
-
-			opts.desc = "Signature Help"
-			keymap.set("i", "<C-h>", function()
-				vim.lsp.buf.signature_help()
-			end, opts)
 
 			opts.desc = "Go to implementations"
 			keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
@@ -85,17 +49,8 @@ return {
 			opts.desc = "Go to next diagnostic"
 			keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-			opts.desc = "Show documentation for what is under cursor"
-			keymap.set("n", "K", vim.lsp.buf.hover)
-
 			opts.desc = "Restart LSP"
 			keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
-
-			-- Rustaceanvim specific keymap (if rust_analyzer is attached)
-			if client.name == "rust_analyzer" then
-				opts.desc = "Rust Tests"
-				keymap.set("n", "<Leader>dt", "<cmd>lua vim.cmd('RustLsp testables')<CR>", opts)
-			end
 		end
 
 		-- Used to enable autocompletion (assign to every lsp server config)
@@ -110,11 +65,46 @@ return {
 
 		-- Configure mason-lspconfig to ensure installation of desired servers
 		masonlspconfig.setup({
-			ensure_installed = { "rust_analyzer", "lua_ls", "omnisharp", "sourcekit", "gdscript" }, -- Include all LSPs you want Mason to manage
+			ensure_installed = { "lua_ls", "omnisharp" }, -- Include all LSPs you want Mason to manage
 			automatic_installation = true,
 			-- The 'handlers' table is removed as it's no longer supported.
 			-- Server-specific configurations are now done directly via lspconfig.setup().
 		})
+
+
+		vim.g.rustaceanvim = function()
+			-- Update this path
+			local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
+			local codelldb_path = extension_path .. 'adapter/codelldb'
+			local liblldb_path = extension_path .. 'lldb/lib/liblldb'
+			local this_os = vim.uv.os_uname().sysname;
+
+			-- The path is different on Windows
+			if this_os:find "Windows" then
+				codelldb_path = extension_path .. "adapter\\codelldb.exe"
+				liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
+			else
+				-- The liblldb extension is .so for Linux and .dylib for MacOS
+				liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
+			end
+
+			local cfg = require('rustaceanvim.config')
+			return {
+				server = {
+					on_attach = function(client, bufnr)
+						on_attach(client, bufnr)
+					end,
+					default_settings = {
+						-- rust-analyzer language server configuration
+						['rust-analyzer'] = {
+						},
+					},
+				},
+				dap = {
+					adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+				},
+			}
+		end
 
 		-- --- LSP Server Configurations ---
 		-- Configure sourcekit
@@ -145,69 +135,6 @@ return {
 				end
 			end,
 		})
-
-		-- Configure rust_analyzer
-		-- Rustaceanvim handles the rust_analyzer setup internally,
-		-- but you can still pass common capabilities and on_attach.
-		-- The rustaceanvim configuration below will override/extend this.
-		lspconfig.rust_analyzer.setup({
-			capabilities = capabilities,
-			on_attach = on_attach, -- Use the common on_attach
-			-- You can add any general rust_analyzer settings here if not handled by rustaceanvim
-		})
-
-		-- Rustaceanvim specific configuration
-		-- This block now directly sets vim.g.rustaceanvim by calling the function
-		vim.g.rustaceanvim = (function() -- Immediately invoke the function
-			local mason_registry = require("mason-registry")
-			local codelldb = mason_registry.get_package("codelldb")
-			local extension_path = codelldb:get_install_path() .. "/extension/"
-			local codelldb_path = extension_path .. "adapter/codelldb"
-			local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
-			local cfg = require("rustaceanvim.config") -- Ensure this is required if used
-
-			return {
-				-- Plugin configuration
-				tools = {
-					-- Add any Rustaceanvim tool configurations here
-				},
-				-- LSP configuration for rust_analyzer
-				server = {
-					-- This on_attach will be specifically for rust_analyzer
-					on_attach = function(client, bufnr)
-						-- Call your global on_attach if you want all common keymaps
-						on_attach(client, bufnr)
-
-						-- Add or re-emphasize Rust-specific keymaps here if needed
-						local opts = { buffer = bufnr, remap = false }
-						opts.desc = "Code Action (Rust)"
-						vim.keymap.set("n", "<leader>ca", function()
-							vim.cmd.RustLsp('codeAction')
-						end, opts)
-
-						-- The Rust Tests keymap is already in the common on_attach,
-						-- but you can put it here if you want it *only* for Rust.
-						-- opts.desc = "Rust Tests"
-						-- keymap.set("n", "<Leader>dt", "<cmd>lua vim.cmd('RustLsp testables')<CR>", opts)
-					end,
-					capabilities = capabilities,
-					default_settings = {
-						-- rust-analyzer language server configuration
-						['rust-analyzer'] = {
-							-- specific rust-analyzer settings
-							check = {
-								command = "clippy", -- Example: use clippy for checks
-							},
-						},
-					},
-				},
-				-- DAP configuration for Rust
-				dap = {
-					adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-				},
-			}
-		end)() -- Immediately invoke the function with ()
-		-- End of Rustaceanvim specific configuration
 
 		-- Configure lua_ls
 		lspconfig.lua_ls.setup({
@@ -254,22 +181,6 @@ return {
 				["textDocument/references"] = require("omnisharp_extended").references_handler,
 				["textDocument/implementation"] = require("omnisharp_extended").implementation_handler,
 			},
-		})
-
-		-- Global diagnostic configuration
-		vim.diagnostic.config({
-			virtual_text = true,
-			-- You might want to add other diagnostic settings here, e.g.,
-			-- signs = true,
-			-- update_in_insert = false,
-			-- float = {
-			--     focusable = false,
-			--     style = "minimal",
-			--     border = "rounded",
-			--     source = "always",
-			--     header = "",
-			--     prefix = "",
-			-- },
 		})
 	end,
 }

@@ -14,7 +14,6 @@ vim.g.godot_executable = '/usr/bin/godot-mono'
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set('n', "<leader>rr", "<cmd>Ex<CR>")
-vim.keymap.set('n', "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
 
 
 -- Diagnostic keymaps
