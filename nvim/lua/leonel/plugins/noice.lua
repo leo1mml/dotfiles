@@ -14,6 +14,7 @@ return {
 		"rcarriga/nvim-notify",
 	},
 	config = function()
+		vim.keymap.set('n', "<leader>nh", "<cmd>Noice history<CR>")
 		require("noice").setup({
 			lsp = {
 				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
