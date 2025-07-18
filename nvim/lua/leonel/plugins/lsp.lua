@@ -25,7 +25,7 @@ return {
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		-- Define a common on_attach function for all LSP servers
-		local on_attach = function(client, bufnr)
+		local on_attach = function(_, bufnr)
 			local opts = { buffer = bufnr, remap = false }
 
 			local keymap = vim.keymap
@@ -72,6 +72,36 @@ return {
 		})
 
 
+		--- LSP Server Configurations ---
+		-- Configure sourcekit
+		lspconfig.sourcekit.setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+			filetypes = { "swift", "objc", "m", "h" },
+			-- Assuming 'lsp' variable is defined elsewhere if needed for cmd logic,
+			-- otherwise, simplify or define 'lsp' here.
+			-- For this example, assuming sourcekit-lsp is in PATH or xcrun handles it.
+			cmd = { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) },
+		})
+
+		-- Configure gdscript
+		lspconfig.gdscript.setup({
+			capabilities = capabilities,
+			on_attach = function(client, bufnr)
+				-- Call the common on_attach first
+				on_attach(client, bufnr)
+				-- Add gdscript-specific on_attach logic
+				local _notify = client.notify
+				client.notify = function(method, params)
+					if method == "textDocument/didClose" then
+						-- Godot doesn't implement didClose yet
+						return
+					end
+					_notify(method, params)
+				end
+			end,
+		})
+
 		vim.g.rustaceanvim = function()
 			-- Update this path
 			local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
@@ -105,82 +135,5 @@ return {
 				},
 			}
 		end
-
-		-- --- LSP Server Configurations ---
-		-- Configure sourcekit
-		lspconfig.sourcekit.setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-			filetypes = { "swift", "objc", "m", "h" },
-			-- Assuming 'lsp' variable is defined elsewhere if needed for cmd logic,
-			-- otherwise, simplify or define 'lsp' here.
-			-- For this example, assuming sourcekit-lsp is in PATH or xcrun handles it.
-			cmd = { vim.trim(vim.fn.system("xcrun -f sourcekit-lsp")) },
-		})
-
-		-- Configure gdscript
-		lspconfig.gdscript.setup({
-			capabilities = capabilities,
-			on_attach = function(client, bufnr)
-				-- Call the common on_attach first
-				on_attach(client, bufnr)
-				-- Add gdscript-specific on_attach logic
-				local _notify = client.notify
-				client.notify = function(method, params)
-					if method == "textDocument/didClose" then
-						-- Godot doesn't implement didClose yet
-						return
-					end
-					_notify(method, params)
-				end
-			end,
-		})
-
-		-- Configure lua_ls
-		lspconfig.lua_ls.setup({
-			capabilities = capabilities,
-			on_attach = on_attach, -- Attach the common on_attach
-			settings = {
-				Lua = {
-					diagnostics = {
-						globals = { "vim" },
-					},
-					workspace = {
-						checkThirdParty = false, -- Example: disable checking third-party Lua files
-					},
-					telemetry = {
-						enable = false, -- Example: disable telemetry
-					},
-				},
-			},
-		})
-
-		-- Configure omnisharp
-		lspconfig.omnisharp.setup({
-			cmd = {
-				"omnisharp",
-				"--languageserver",
-				"--hostPID",
-				tostring(vim.fn.getpid()),
-			},
-			capabilities = capabilities,
-			on_attach = on_attach, -- Attach the common on_attach
-			settings = {
-				RoslynExtensionsOptions = {
-					enableDecompilationSupport = false,
-					enableImportCompletion = true,
-					enableAnalyzersSupport = true,
-				},
-			},
-			root_dir = lspconfig.util.root_pattern("*.sln", ".git", "omnisharp.json"), -- Added more root patterns
-			-- Handlers for omnisharp_extended are still valid as they are specific to that plugin's integration,
-			-- not mason-lspconfig's global handlers.
-			handlers = {
-				["textDocument/definition"] = require("omnisharp_extended").definition_handler,
-				["textDocument/typeDefinition"] = require("omnisharp_extended").type_definition_handler,
-				["textDocument/references"] = require("omnisharp_extended").references_handler,
-				["textDocument/implementation"] = require("omnisharp_extended").implementation_handler,
-			},
-		})
 	end,
 }
