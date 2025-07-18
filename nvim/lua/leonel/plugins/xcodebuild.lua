@@ -1,29 +1,19 @@
 local progress_handle
 
 -- Function to check if the current directory is an Xcode project
--- Correctly uses vim.fn.isdirectory for .xcodeproj and .xcworkspace
 local function is_xcode_project_dir()
     local cwd = vim.fn.getcwd()
-    -- Check for .xcodeproj or .xcworkspace directories in the current directory
-    if vim.fn.isdirectory(cwd .. "/.xcodeproj") ~= 0 or vim.fn.isdirectory(cwd .. "/.xcworkspace") ~= 0 then
-        return true
-    end
+    local xcodeproj = vim.fn.globpath(cwd, "*.xcodeproj", 0, 1)
+    local xcworkspace = vim.fn.globpath(cwd, "*.xcworkspace", 0, 1)
+    local xcworkspace = vim.fn.globpath(cwd, "*.swift", 0, 1)
 
-    -- If you want to optionally check parent directories, uncomment and use this block.
-    -- Remember that this will incur a slight performance cost for each directory traversed.
-    -- local found_xcodeproj = #vim.fs.find({ '.xcodeproj' }, { path = cwd, upward = true, limit = 1, type = 'directory' }) > 0
-    -- local found_xcworkspace = #vim.fs.find({ '.xcworkspace' }, { path = cwd, upward = true, limit = 1, type = 'directory' }) > 0
-    -- if found_xcodeproj or found_xcworkspace then
-    --    return true
-    -- end
-
-    return false
+    return (#xcodeproj > 0 or #xcworkspace > 0)
 end
 
 return {
     "wojciech-kulik/xcodebuild.nvim",
-    -- Use 'cond' primarily for conditional loading with lazy.nvim.
-    -- 'enabled' is often redundant if 'cond' is used for the same check.
+    -- Use 'cond' for conditional loading.
+    -- Make sure 'is_xcode_project_dir()' explicitly returns Lua true/false.
     cond = is_xcode_project_dir(),
     dependencies = {
         "nvim-telescope/telescope.nvim",
@@ -31,6 +21,7 @@ return {
         "nvim-treesitter/nvim-treesitter", -- (optional) for Quick tests support (required Swift parser)
     },
     config = function()
+        -- The rest of your configuration remains the same
         require("xcodebuild").setup({
             code_coverage = {
                 enabled = true,
