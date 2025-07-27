@@ -108,6 +108,8 @@ return {
 			local codelldb_path = extension_path .. 'adapter/codelldb'
 			local liblldb_path = extension_path .. 'lldb/lib/liblldb'
 			local this_os = vim.uv.os_uname().sysname;
+			print("codelldb_path: " .. codelldb_path)
+			print("liblldb_path: " .. liblldb_path)
 
 			-- The path is different on Windows
 			if this_os:find "Windows" then
@@ -120,16 +122,6 @@ return {
 
 			local cfg = require('rustaceanvim.config')
 			return {
-				server = {
-					on_attach = function(client, bufnr)
-						on_attach(client, bufnr)
-					end,
-					default_settings = {
-						-- rust-analyzer language server configuration
-						['rust-analyzer'] = {
-						},
-					},
-				},
 				dap = {
 					adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
 				},
