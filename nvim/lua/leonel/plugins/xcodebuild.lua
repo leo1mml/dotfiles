@@ -5,9 +5,9 @@ local function is_xcode_project_dir()
     local cwd = vim.fn.getcwd()
     local xcodeproj = vim.fn.globpath(cwd, "*.xcodeproj", 0, 1)
     local xcworkspace = vim.fn.globpath(cwd, "*.xcworkspace", 0, 1)
-    local xcworkspace = vim.fn.globpath(cwd, "*.swift", 0, 1)
+    local swift = vim.fn.globpath(cwd, "*.swift", 0, 1)
 
-    return (#xcodeproj > 0 or #xcworkspace > 0)
+    return (#xcodeproj > 0 or #xcworkspace > 0 or #swift > 0)
 end
 
 return {
