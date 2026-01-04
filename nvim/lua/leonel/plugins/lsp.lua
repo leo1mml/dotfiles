@@ -102,28 +102,25 @@ return {
 			end,
 		})
 
+		-- Define the configuration for rustaceanvim
 		vim.g.rustaceanvim = function()
-			-- Update this path
-			local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/'
-			local codelldb_path = extension_path .. 'adapter/codelldb'
-			local liblldb_path = extension_path .. 'lldb/lib/liblldb'
-			local this_os = vim.uv.os_uname().sysname;
-			print("codelldb_path: " .. codelldb_path)
-			print("liblldb_path: " .. liblldb_path)
+			local home = os.getenv("HOME")
+			local liblldb_path = home ..
+				"/.local/share/nvim/mason/packages/codelldb/extension/lldb/lib/liblldb.so" -- Get the Mason installation path
+			local codelldb_path = home .. "/.local/share/nvim/mason/packages/codelldb/extension/adapter/codelldb"
 
-			-- The path is different on Windows
-			if this_os:find "Windows" then
-				codelldb_path = extension_path .. "adapter\\codelldb.exe"
-				liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
-			else
-				-- The liblldb extension is .so for Linux and .dylib for MacOS
-				liblldb_path = liblldb_path .. (this_os == "Linux" and ".so" or ".dylib")
-			end
+			-- If you are on Linux (Fedora), the liblldb path ends in .so
+			-- If you ever use this on macOS, it would be .dylib
 
 			local cfg = require('rustaceanvim.config')
 			return {
 				dap = {
 					adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+				},
+				server = {
+					on_attach = function(client, bufnr)
+						-- Your custom keymaps here (e.g., K for hover, etc.)
+					end,
 				},
 			}
 		end
