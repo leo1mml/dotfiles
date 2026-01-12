@@ -103,7 +103,7 @@ return {
 
 		-- Define the configuration for rustaceanvim
 		vim.g.rustaceanvim = function()
-			local extension_path = vim.env.HOME .. "/.local/share/nvim/mason/packages/codelldb/extension"
+			local extension_path = vim.env.HOME .. "/.local/share/nvim/mason/packages/codelldb/extension/"
 			local codelldb_path = extension_path .. "adapter/codelldb"
 			local liblldb_path = extension_path .. "lldb/lib/liblldb"
 			local this_os = vim.uv.os_uname().sysname
@@ -121,6 +121,7 @@ return {
 			return {
 				dap = {
 					adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+					load_rust_types = true,
 				},
 				server = {
 					on_attach = function(_, _)
