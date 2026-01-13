@@ -1,8 +1,11 @@
 
 [general]
 import = [
-  "/opt/homebrew/lib/node_modules/alacritty-themes/themes/Tokyonight_Storm.toml"
+  "~/.config/alacritty/themes/themes/catppuccin_mocha.toml"
 ]
+
+[env]
+TERM = "xterm-256color"
 
 [font.bold]
 family = "Firacode Nerd Font"
@@ -24,7 +27,9 @@ style = "Regular"
 option_as_alt = "Both"
 blur = true
 opacity = 1
+[font]
+size = 14.0
 
-  [window.padding]
-  x = 0
-  y = 10
+[window.padding]
+x = 0
+y = 10
