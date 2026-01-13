@@ -19,6 +19,10 @@ return {
         "nvim-telescope/telescope.nvim",
         "MunifTanjim/nui.nvim",
         "nvim-treesitter/nvim-treesitter", -- (optional) for Quick tests support (required Swift parser)
+        "nvim-tree/nvim-tree.lua",         -- (optional) to manage project files
+        "stevearc/oil.nvim",               -- (optional) to manage project files
+        "nvim-treesitter/nvim-treesitter", -- (optional) for Quick tests support (required Swift parser)
+        "folke/trouble.nvim",
     },
     config = function()
         -- The rest of your configuration remains the same
@@ -30,37 +34,6 @@ return {
                 pymobiledevice = {
                     enabled = true,
                 },
-            },
-            show_build_progress_bar = false,
-            logs = {
-                notify = function(message, severity)
-                    local fidget = require("fidget")
-                    if progress_handle then
-                        progress_handle.message = message
-                        if not message:find("Loading") then
-                            progress_handle:finish()
-                            progress_handle = nil
-                            if vim.trim(message) ~= "" then
-                                fidget.notify(message, severity)
-                            end
-                        end
-                    else
-                        fidget.notify(message, severity)
-                    end
-                end,
-                notify_progress = function(message)
-                    local progress = require("fidget.progress")
-
-                    if progress_handle then
-                        progress_handle.title = ""
-                        progress_handle.message = message
-                    else
-                        progress_handle = progress.handle.create({
-                            message = message,
-                            lsp_client = { name = "xcodebuild.nvim" },
-                        })
-                    end
-                end,
             },
         })
 
@@ -90,21 +63,38 @@ return {
         vim.keymap.set("n", "<leader>Xx", "<cmd>XcodebuildQuickfixLine<cr>", { desc = "Quickfix Line" })
         vim.keymap.set("n", "<leader>Xa", "<cmd>XcodebuildCodeActions<cr>", { desc = "Show Code Actions" })
 
-
-        -- Xcode stuff
+        -- Debugger
         local xcodebuild = require("xcodebuild.integrations.dap")
+        xcodebuild.setup()
 
-        -- TODO: change it to your local codelldb path
-        local codelldbPath = "~/tools/codelldb-aarch64-darwin/extension/adapter/codelldb"
+        vim.keymap.set("n", "<leader>dd", xcodebuild.build_and_debug, { desc = "Build & Debug" })
+        vim.keymap.set("n", "<leader>dr", xcodebuild.debug_without_build, { desc = "Debug Without Building" })
+        vim.keymap.set("n", "<leader>dt", xcodebuild.debug_tests, { desc = "Debug Tests" })
+        vim.keymap.set("n", "<leader>dT", xcodebuild.debug_class_tests, { desc = "Debug Class Tests" })
+        vim.keymap.set("n", "<leader>b", xcodebuild.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+        vim.keymap.set("n", "<leader>B", xcodebuild.toggle_message_breakpoint, { desc = "Toggle Message Breakpoint" })
+        vim.keymap.set("n", "<leader>dx", xcodebuild.terminate_session, { desc = "Terminate Debugger" })
 
-        xcodebuild.setup(codelldbPath)
+        -- Trouble
+        vim.api.nvim_create_autocmd("User", {
+            pattern = { "XcodebuildBuildFinished", "XcodebuildTestsFinished" },
+            callback = function(event)
+                if event.data.cancelled then
+                    return
+                end
 
-        vim.keymap.set("n", "<leader>Xdd", xcodebuild.build_and_debug, { desc = "Build & Debug" })
-        vim.keymap.set("n", "<leader>Xdr", xcodebuild.debug_without_build, { desc = "Debug Without Building" })
-        vim.keymap.set("n", "<leader>Xdt", xcodebuild.debug_tests, { desc = "Debug Tests" })
-        vim.keymap.set("n", "<leader>XdT", xcodebuild.debug_class_tests, { desc = "Debug Class Tests" })
-        vim.keymap.set("n", "<leader>Xdb", xcodebuild.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-        vim.keymap.set("n", "<leader>XdB", xcodebuild.toggle_message_breakpoint, { desc = "Toggle Message Breakpoint" })
-        vim.keymap.set("n", "<leader>Xdx", xcodebuild.terminate_session, { desc = "Terminate Debugger" })
+                if event.data.success then
+                    require("trouble").close()
+                elseif not event.data.failedCount or event.data.failedCount > 0 then
+                    if next(vim.fn.getqflist()) then
+                        require("trouble").open("quickfix")
+                    else
+                        require("trouble").close()
+                    end
+
+                    require("trouble").refresh()
+                end
+            end,
+        })
     end,
 }
