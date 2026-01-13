@@ -79,12 +79,7 @@ return {
 		formatters = {
 			swiftformat = {
 				command = "swiftformat",
-				args = {
-					"--disable",
-					"trailingCommas, wrapMultilineStatementBraces, sortImports, unusedArguments",
-					"--stdinpath",
-					"$FILENAME",
-				},
+				args = { '--disable', 'trailingCommas, wrapMultilineStatementBraces, sortImports, unusedArguments, spaceAroundOperators', '--stdinpath', '$FILENAME' },
 				stdin = true,
 			},
 			shfmt = {
