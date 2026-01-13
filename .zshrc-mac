@@ -1,9 +1,10 @@
 eval "$(starship init zsh)"
 eval "$(rbenv init - zsh)"
 
-
+TERM=xterm
 export PATH=$PATH:/home/leo1mml/dotfiles/bin
 alias lf=ueberwrap
+alias nvim-ios='NVIM_APPNAME=nvim-ios nvim'
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # Created by `pipx` on 2024-06-25 09:54:57
@@ -12,3 +13,6 @@ export PATH="$PATH:~/tools/codelldb-aarch64-darwin/extension/adapter/"
 if [ -f ~/.env ]; then
     . ~/.env
 fi
+
+export GITLAB_TOKEN="put your gitlab token here"
+export GITLAB_URL="put your gitlab url here"
