@@ -21,7 +21,7 @@ vim.opt.wrap = true
 vim.opt.clipboard = "unnamedplus"
 vim.g.mapleader = " "
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.o.mouse = "a"
 -- Enable break indent
 vim.o.breakindent = true
 
@@ -34,21 +34,23 @@ vim.o.smartcase = true
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
+vim.wo.signcolumn = "yes"
+-- In init.lua
+vim.opt.timeoutlen = 300 -- Sets timeout to 300ms
 
 -- Set colorscheme
 vim.o.termguicolors = true
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = "menuone,noselect"
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.hl.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		vim.hl.on_yank()
+	end,
+	group = highlight_group,
+	pattern = "*",
 })
