@@ -14,5 +14,4 @@ if [ -f ~/.env ]; then
     . ~/.env
 fi
 
-export GITLAB_TOKEN="put your gitlab token here"
-export GITLAB_URL="put your gitlab url here"
+[ -f ~/.secrets ] && source ~/.secrets
